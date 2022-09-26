@@ -1,12 +1,11 @@
 title: My great example,
 description: A short, one-line description
-author: John Doo  # or use your favorite artist name!
-email: your_email # optional
-discord_handle: your_handle # your Discord user-name (optional)
+author: John Doo                   # or use your favorite artist name
 keywords: ["sprites", "interrupt"] # add as many keywords as you like
-languages: [c, asm] # asm, basic, c, rust, ...
-buildtools: [kickc, make] # cc65, llvm-mos, kickasm, bsa, ...
-license: MIT  # prefer a permissive licence like MIT
-rom: 920376   # tested with this ROM version 
+languages: [c, asm]                # asm, basic, c, rust, ...
+buildtools: [kickc, make]          # cc65, llvm-mos, kickasm, bsa, ...
+rom: 920376                        # tested with this ROM version
+image: snapshot.png                # relative path to screenshot or illustration (optional)
+email: your@email                  # make it easier to find you (optional)
+discord_handle: your_handle        # MEGA65 Discord user-name (optional)
 filehost_id: 00000000-0000-0000-0000-000000000000 # MEGA65 FileHost entry (optional)
-

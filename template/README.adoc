@@ -1,0 +1,17 @@
+= Title of the Example
+
+Longer description of what the example illustrates; help the
+reader understand your code. Please keep this file in the asciidoc
+format (`.adoc`) which is similar to markdown, but more powerful.
+
+== Building and Running
+
+Describe how to build the software. Consider adding a `Makefile`,
+or in other ways describe how to build. If a special tool is required,
+e.g. a specific assembler or compiler, please specify.
+
+[source, bash]
+---
+make
+make run
+---

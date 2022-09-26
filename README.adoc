@@ -1,0 +1,12 @@
+= MEGA65 Code Base
+
+A collection of user contributed source code for the MEGA65.
+Each directory contains individual examples.
+
+== How to Contribute
+
+* [ ] Clone/fork this repository
+* [ ] Create a new directory for your project and add a `README.adoc` and `info.yaml` as
+      illustrated in this link:template[template/]. Please use small caps and `_` for space in
+      the directory name.
+* [ ] Make a pull-request (PR) to the main repository, and await review.

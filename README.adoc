@@ -2,12 +2,11 @@
 
 A gathering point for community created software examples for the MEGA65.
 The goal is to create a collection of source code examples, demonstrating every aspect
-of the MEGA65 capabilities. Each example has it's own directory and includes instructions
-how to build.
+of the MEGA65 capabilities. Each example has it's own directory and build instructions.
 
 == How to Contribute
 
 1. Clone/fork this repository
 2. Create a new directory for your project - please use small letters and `_` for space.
-3. Add files plus a `README.adoc` and `info.yaml` as illustrated in this link:template[template/].
+3. Add files, including a `README.adoc` and `info.yaml` file as illustrated in the link:template[template] directory.
 4. Make a pull-request (PR) to the main repository, and await review.

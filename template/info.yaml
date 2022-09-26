@@ -1,6 +1,6 @@
 title: My great example,
 description: A short, one-line description
-author: Beryl Wayne                # real or your favorite artist name
+author: Beryl Wayne                # real or favorite artist name
 keywords: ["sprites", "interrupt"] # add as many keywords as you like
 languages: [c, asm]                # asm, basic, c, rust, ...
 requirements: [kickc, make]        # cc65, llvm-mos, kickasm, acme, bsa, ca65, ophis, ...

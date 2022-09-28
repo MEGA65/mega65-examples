@@ -7,6 +7,8 @@ of the MEGA65 capabilities. Each example has it's own directory and build instru
 == How to Contribute
 
 1. Clone/fork this repository
-2. Create a new directory for your project - please use small letters and `_` for space.
-3. Add files, including a `README.adoc` and `info.yaml` file as illustrated in the link:template[template] directory.
+2. Create a new project directory prefixed with the language, _e.g._
+   `asm_`, `basic_`, `c_` etc. Please use small letters and replace spaces with `_`.
+3. Add files, including a `README.adoc` and `info.yaml` file as illustrated in the
+   link:template[template] directory.
 4. Make a pull-request (PR) to the main repository, and await review.

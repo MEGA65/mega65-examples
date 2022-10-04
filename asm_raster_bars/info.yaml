@@ -1,0 +1,7 @@
+title: Raster Colour Bars Example
+description: A very simple demo showing one approach how raster colour bars can be achieved on the Mega65. This demo is more for understanding how it is achieved.
+author: George Kirkham            
+keywords: ["raster", "colour bars"]
+languages: [asm]                
+requirements: [C64 Studio]      
+rom: 920376                     

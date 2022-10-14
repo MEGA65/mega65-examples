@@ -59,3 +59,16 @@ dkms.conf
 
 # PRG files
 *.prg
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt
+DartConfiguration.tcl
+Testing
+CTestTestfile.cmake
+.swp
+*.swp
+

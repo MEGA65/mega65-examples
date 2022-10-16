@@ -71,4 +71,8 @@ Testing
 CTestTestfile.cmake
 .swp
 *.swp
+CPM_modules/
+_deps/
+cpm-package-lock.cmake
 
+.vscode/

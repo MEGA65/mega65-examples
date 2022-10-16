@@ -76,3 +76,4 @@ _deps/
 cpm-package-lock.cmake
 
 .vscode/
+.idea/

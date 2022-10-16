@@ -1,0 +1,10 @@
+title: Plasma effect,
+description: A demo-inspired plasma effect present in many assemble examples
+author: wombat
+keywords: ["plasma", "charset"]
+languages: [c]
+requirements: [clang]
+rom: 920376
+discord: wombat
+prgs: [plasma.prg]
+build: cmake -DCMAKE_PREFIX_PATH=<llvm-mos-sdk-dir> . ; make

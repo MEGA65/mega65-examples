@@ -1,8 +1,8 @@
 /**
- * Plasma test sourced from cc65/samples/cbm
+ * Plasma effect sourced from cc65/samples/cbm
  * - 2001 by groepaz
  * - Cleanup and porting by Ullrich von Bassewitz.
- * - Modified to work with cc65 and llvm-mos (wombat)
+ * - Ported to MEGA65 and clenup to work with both llvm-mos and cc65 (wombat)
  */
 
 #include <stdint.h>

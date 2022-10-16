@@ -14,4 +14,4 @@ add_compile_options(-mcpu=mos65c02 -Os -Wall -Wextra -Wshadow -Wconversion -Wno-
 
 add_executable(plasma plasma.c)
 target_link_libraries(plasma mega65libc)
-set_target_properties(plasma PROPERTIES OUTPUT_NAME plasma_cpp.prg)
+set_target_properties(plasma PROPERTIES OUTPUT_NAME plasma.prg)

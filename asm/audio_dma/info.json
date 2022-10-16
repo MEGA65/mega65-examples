@@ -1,0 +1,17 @@
+{
+    "title": "Audio DMA Example",
+    "description": "A simple example of how to play Audio samples using DMA on the Mega65. See source code for comments",
+    "author": "George Kirkham",
+    "keywords": [
+        "audio DMA",
+        "samples"
+    ],
+    "languages": [
+        "asm"
+    ],
+    "requirements": [
+        "C64 Studio"
+    ],
+    "rom": 920376
+}
+

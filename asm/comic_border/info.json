@@ -1,0 +1,17 @@
+{
+    "title": "Audio DMA Example",
+    "description": "A simple demo using the side, top & bottom borders for screen transitions. Nothing too technical but I think looks interesting and a bit of fun.",
+    "author": "George Kirkham",
+    "keywords": [
+        "rasters",
+        "border"
+    ],
+    "languages": [
+        "asm"
+    ],
+    "requirements": [
+        "C64 Studio"
+    ],
+    "rom": 920376
+}
+

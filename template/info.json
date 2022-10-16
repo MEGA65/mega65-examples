@@ -1,0 +1,30 @@
+{
+    "title": "My great example,",
+    "description": "A short, one-line description",
+    "author": "Beryl Wayne",
+    "keywords": [
+        "sprites",
+        "interrupt"
+    ],
+    "languages": [
+        "c",
+        "asm"
+    ],
+    "requirements": [
+        "kickc",
+        "make"
+    ],
+    "rom": 920376,
+    "discord": "username (OPTIONAL)",
+    "email": "your@email (OPTIONAL)",
+    "images": [
+        "snapshot.png (OPTIONAL)"
+    ],
+    "prgs": [
+        "example.prg"
+    ],
+    "build": "make",
+    "website": "www.myblog.com (OPTIONAL)",
+    "filehost_id": "0000-0000-0000-0000 (OPTIONAL)"
+}
+

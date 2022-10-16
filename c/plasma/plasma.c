@@ -8,13 +8,10 @@
 #include <stdint.h>
 #include <random.h>
 #include <memory.h>
-
-#include "_vic2.h"
 #include <stdio.h>
-#define RAND_MAX 0x7FFF
-#define VIC (*(volatile struct __vic2*)0xd000)
-#define cputc(letter) __putchar(letter)
 
+#define RAND_MAX 0x7FFF
+#define cputc(letter) __putchar(letter)
 #define COLS 80
 #define ROWS 25
 #define SINESIZE 256
@@ -22,6 +19,7 @@
 #define SCREEN2 0x2800
 #define CHARSET 0x3000
 #define VICII_SCREEN 0x0400
+#define VICII_MEMORY_CONTROL 0xd018
 #define VICIII_KEY 0xd02f
 #define VICIV_CONTROLA 0xd030
 #define VICIV_CONTROLB 0xd031
@@ -107,10 +105,10 @@ void generate_charset(void)
 /** Set MEGA65 speed to 3.5 Mhz */
 void speed_mode3()
 {
-  uint8_t val = PEEK(0xd031) | 0b01000000; // set FAST bit
-  POKE(0xd031, val);
-  val = PEEK(0xd054) & 0b10111111; // unset VFAST
-  POKE(0xd054, val);
+  uint8_t val = PEEK(VICIV_CONTROLB) | 0b01000000; // set FAST bit
+  POKE(VICIV_CONTROLB, val);
+  val = PEEK(VICIV_CONTROLC) & 0b10111111; // unset VFAST
+  POKE(VICIV_CONTROLC, val);
 }
 
 int main()
@@ -120,10 +118,10 @@ int main()
   while (1) {
     /* Build page 1, then make it visible */
     draw((uint8_t*)SCREEN1);
-    POKE(&VIC.addr, PAGE1);
+    POKE(VICII_MEMORY_CONTROL, PAGE1);
 
     /* Build page 2, then make it visible */
     draw((uint8_t*)SCREEN2);
-    POKE(&VIC.addr, PAGE2);
+    POKE(VICII_MEMORY_CONTROL, PAGE2);
   }
 }

@@ -1,9 +1,12 @@
-# C++ Plasma example
+# Plasma example in LLVM C (`clang`)
 
 This illustrates how to set up a C project using `clang` from the
 [llvm-mos project](https://llvm-mos.org/wiki/Welcome)
 and the official [`mega65-libc`](https://github.com/MEGA65/mega65-libc).
 The latter is automatically downloaded by the `CMake` build system.
+
+The setup is almost identical to C++ (`clang++`) but you will need to
+update the `CMakeLists.txt` with `CXX` instead of `C` in the language setting.
 
 ## Building
 

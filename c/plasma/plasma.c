@@ -2,26 +2,23 @@
  * Plasma effect sourced from cc65/samples/cbm
  * - 2001 by groepaz
  * - Cleanup and porting by Ullrich von Bassewitz.
- * - Ported to MEGA65 and clenup to work with both llvm-mos and cc65 (wombat)
+ * - 2022 - cleanup and MEGA65/llvm-mos adaptation (wombat)
+ *   Note that we reduce the MEGA65 clock frequency to 3.5 Mhz.
+ *   Also clangs `#pragma unroll` gives a significant speedup when
+ *   using the -Os optimization level.
  */
 
-#include <stdint.h>
+#include <stdio.h>
 #include <random.h>
 #include <memory.h>
-#include <stdio.h>
 
-#define RAND_MAX 0x7FFF
-#define cputc(letter) __putchar(letter)
 #define COLS 80
 #define ROWS 25
 #define SINESIZE 256
 #define SCREEN1 0x0800
 #define SCREEN2 0x2800
 #define CHARSET 0x3000
-#define VICII_SCREEN 0x0400
 #define VICII_MEMORY_CONTROL 0xd018
-#define VICIII_KEY 0xd02f
-#define VICIV_CONTROLA 0xd030
 #define VICIV_CONTROLB 0xd031
 #define VICIV_CONTROLC 0xd054
 
@@ -49,7 +46,7 @@ uint8_t c1B = 0;
 uint8_t c2A = 0;
 uint8_t c2B = 0;
 
-static void draw(uint8_t* screen)
+void draw(uint8_t* screen)
 {
   static uint8_t xbuffer[COLS];
   static uint8_t ybuffer[ROWS];
@@ -74,30 +71,30 @@ static void draw(uint8_t* screen)
   c2A += 2;
   c2B -= 3;
   for (int i = 0; i < ROWS; ++i) {
-    // can optionally be unrolled with clangs `#pragma unroll`
-    for (int j = 0; j < COLS; ++j, ++screen) {
-      POKE(screen, xbuffer[j] + ybuffer[i]);
+#pragma unroll
+    for (int j = 0; j < COLS; ++j) {
+      POKE(screen++, xbuffer[j] + ybuffer[i]);
     }
   }
 }
 
-void generate_charset(void)
+void generate_charset()
 {
   static const uint8_t bits[8] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 
   for (int cnt = 0; cnt < SINESIZE; ++cnt) {
-    uint8_t sine = sinustable[cnt];
+    const uint8_t sine = sinustable[cnt];
     for (int i = 0; i < 8; ++i) {
       uint8_t char_pattern = 0;
       for (int j = 0; j < 8; ++j) {
-        if ((rand8(0xff) & 0xFFu) > sine) {
+        if ((rand8(0xff) & 0xff) > sine) {
           char_pattern |= bits[j];
         }
       }
-      POKE(CHARSET + (cnt * 8) + i, char_pattern);
+      POKE(CHARSET + cnt * 8 + i, char_pattern);
     }
     if ((cnt & 0x07) == 0) {
-      cputc('.');
+      putchar('.');
     }
   }
 }

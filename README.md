@@ -8,6 +8,6 @@ of the MEGA65 capabilities. Each example has it's own directory and build instru
 
 1. Clone/fork this repository
 2. Create a new project directory. Please use small letters and replace spaces with `_`.
-3. Add files, including a `README.adoc` and `info.yaml` file as illustrated in the
+3. Add files, including a `README.md` and `info.json` file as illustrated in the
    link:template[template] directory.
 4. Make a pull-request (PR) to the main repository, and await review.

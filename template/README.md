@@ -1,16 +1,16 @@
-= Title of the Example
+# Title of the Example
 
 Longer description of what the example illustrates; help the
-reader understand your code. Please keep this file in link:https://asciidoc.org[AsciiDoc]
-format (`.adoc`) which is similar to Markdown, but more powerful.
+reader understand your code. Please keep this file in Markdown format (`.md`).
 
-== Building and Running
+## building and Running
 
 Describe how to build the software. Consider adding a `Makefile`,
 or in other ways describe how to build. For example,
 
-[source, bash]
+~~~ bash
 make
 make run
+~~~
 
 If a special tool is required, _e.g._ a specific assembler or compiler, please specify.

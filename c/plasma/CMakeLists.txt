@@ -9,3 +9,6 @@ CPMAddPackage(NAME mega65libc GITHUB_REPOSITORY mega65/mega65-libc GIT_TAG maste
 add_executable(plasma plasma.c)
 target_link_libraries(plasma mega65libc)
 set_target_properties(plasma PROPERTIES OUTPUT_NAME plasma.prg)
+
+add_custom_target(run COMMENT "Run with Xemu" COMMAND xmega65.native -prg $<TARGET_FILE:plasma>)
+add_custom_target(hw COMMENT "Transfer and run on hardware" COMMAND matrix65 --port /dev/cu.usbserial-AQ027F6E prg --run $<TARGET_FILE:plasma> --reset)

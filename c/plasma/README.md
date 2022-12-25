@@ -28,3 +28,17 @@ The latter requires [`matrix65`](https://files.mega65.org?id=c6ac58ca-66cd-4cd0-
 please edit `CMakeLists.txt` to adjust the serial device name,
 or change to instead use the `m65.exe` transfer tool.
 
+## Metadata
+
+Field         | Value
+------------- | -------------------------------------------------
+title         | Plasma effect
+description   | A demo-inspired plasma effect
+author        | wombat
+keywords      | plasma, charset
+languages     | c
+requirements  | llvm-mos
+rom           | 920376
+discord       | wombat
+prgs          | plasma.prg
+build         | `cmake -DCMAKE_PREFIX_PATH=<llvm-mos-sdk-dir> . ; make`

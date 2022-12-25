@@ -1,0 +1,9 @@
+[build]
+target = "mos-mega65-none"
+rustflags = ["-C", "opt-level=s", "-C", "lto=fat"]
+
+[target.mos-mega65-none]
+runner = ["xmega65", "-prg"]
+
+[unstable]
+build-std = ["core", "alloc"]

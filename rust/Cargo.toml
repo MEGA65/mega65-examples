@@ -1,8 +1,19 @@
-[package]
-name = "plasma"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+members = ["plasma"]
+resolver = "2" # https://github.com/mlund/mos-hardware/issues/1
+
+[workspace.package]
+description = "Rust examples for MEGA65"
+authors = ["The MEGA65 Community"]
 license = "MIT OR Apache-2.0"
+repository = "https://github.com/mega65/mega65-examples"
+keywords = ["mega65", "8-bit", "llvm-mos", "6502", "rust"]
+categories = ["embedded", "no-std"]
+edition = "2021"
+
+[workspace.dependencies]
+mos-hardware = {git = "https://github.com/mlund/mos-hardware", branch = "main"}
+ufmt-stdio = "0"
 
 [profile.dev]
 opt-level = 2
@@ -14,8 +25,3 @@ codegen-units = 1
 opt-level = "s"
 lto = true
 debug = 0
-
-[dependencies]
-mos-hardware = {git = "https://github.com/mlund/mos-hardware", branch = "main"}
-ufmt-stdio = "0"
-itertools = {version = "0.10", default-features = false}

@@ -1,12 +1,12 @@
-# Rust examples for MEGA65
+# Plasma example in Rust
 
-This illustrates how to set up a cargo workspace using `rust-mos` and the
+This illustrates how to set up a Rust project using `rust-mos` and the
 [`mos-hardware`](https://github.com/mlund/mos-hardware) crate.
 The latter includes hardware register tables; bindings to MEGA65 libc; etc.
 
 ## Building and Running
 
-Building requires [rust-mos](https://github.com/mrk-its/rust-mos).
+The project requires [rust-mos](https://github.com/mrk-its/rust-mos).
 A docker image of rust-mos is [available](https://hub.docker.com/r/mrkits/rust-mos) if you
 do not fancy compiling LLVM and rust-mos, see below.
 
@@ -22,20 +22,21 @@ The easiest way is to use the provided `.devcontainer.json` configuration for vs
 4. In the vscode terminal do:
    ~~~ bash
    export CARGO_NET_GIT_FETCH_WITH_CLI=true # only needed if Docker uses qemu
-   cargo build --release                    # outputs to target/mos-mega65-none/release
+   cargo build --release                    # output in target/mos-mega65-none/release
    ~~~
 
-## Adding More Examples
+## Metadata
 
-1. Create a new directory, e.g. `my_example` in the `rust` directory with the following layout:
-   ~~~
-   └── my_example/
-       ├── README.md
-       ├── Cargo.toml
-       └── src/
-           └── main.rs
-   ~~~
-   (see `plasma/` for an example)
-2. Add to directory to `members` in `rust/Cargo.toml`
-3. Build with `cargo build --release -p my_example
+Field         | Value
+------------- | -------------------------------
+title         | Plasma effect
+description   | A demo-inspired plasma effect
+author        | wombat
+keywords      | plasma, charset
+languages     | rust
+requirements  | rust-mos
+rom           | 920376
+discord       | wombat
+prgs          | plasma.prg
+build         | `cargo build --release`
 

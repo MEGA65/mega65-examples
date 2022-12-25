@@ -77,3 +77,7 @@ cpm-package-lock.cmake
 
 .vscode/
 .idea/
+
+# rust
+target/
+Cargo.lock

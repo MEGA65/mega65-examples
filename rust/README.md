@@ -29,13 +29,13 @@ The easiest way is to use the provided `.devcontainer.json` configuration for vs
 
 1. Create a new directory, e.g. `my_example` in the `rust` directory with the following layout:
    ~~~
-   └── my_example/
-       ├── README.md
-       ├── Cargo.toml
-       └── src/
-           └── main.rs
+   my_example/
+   ├── README.md
+   ├── Cargo.toml
+   └── src/
+       └── main.rs
    ~~~
    (see `plasma/` for an example)
-2. Add to directory to `members` in `rust/Cargo.toml`
-3. Build with `cargo build --release -p my_example
+2. Add the new directory to `members` in `rust/Cargo.toml`
+3. Build with `cargo build --release -p my_example`
 

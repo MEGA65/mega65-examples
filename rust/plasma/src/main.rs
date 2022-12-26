@@ -15,68 +15,85 @@ use core::panic::PanicInfo;
 use mos_hardware::*;
 use ufmt_stdio::*;
 
-/// Generate stochastic character set
-fn make_charset(charset_ptr: *mut u8) {
-    let generate_char = |sine| {
-        const BITS: [u8; 8] = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80];
-        let mut char_pattern: u8 = 0;
-        BITS.iter()
-            .filter(|_| mega65::rand8(u8::MAX) > sine)
-            .for_each(|bit| {
-                char_pattern |= bit;
-            });
-        char_pattern
-    };
-
-    repeat_element(SINETABLE.iter().copied(), 8)
-        .enumerate()
-        .for_each(|(cnt, sine)| {
-            let character = generate_char(sine);
-            unsafe {
-                poke!(charset_ptr.offset(cnt as isize), character);
-            }
-            if cnt % 64 == 0 {
-                print!(".");
-            }
-        });
+/// Class for rendering a character mode plasma effect
+struct Plasma {
+    yindex1: u8,
+    yindex2: u8,
+    xindex1: u8,
+    xindex2: u8,
+    xbuffer: [u8; 80],
+    ybuffer: [u8; 25],
 }
 
-/// Render entire screen
-/// @todo Rename to meaningful variable names (reminiscence from C)
-fn render_plasma(screen_ptr: *mut u8) {
-    static mut C1A: u8 = 0;
-    static mut C1B: u8 = 0;
-    static mut C2A: u8 = 0;
-    static mut C2B: u8 = 0;
-    static mut XBUF: [u8; 80] = [0; 80];
-    static mut YBUF: [u8; 25] = [0; 25];
-    unsafe {
-        let mut c1a = C1A;
-        let mut c1b = C1B;
-        for y in YBUF.iter_mut() {
-            *y = SINETABLE[c1a as usize].wrapping_add(SINETABLE[c1b as usize]);
-            c1a = c1a.wrapping_add(4);
-            c1b = c1b.wrapping_add(9);
+impl Plasma {
+    /// Create new instance and initialize character set
+    pub fn new(charset_address: *mut u8) -> Plasma {
+        Plasma::make_charset(charset_address);
+        Plasma {
+            yindex1: 0,
+            yindex2: 0,
+            xindex1: 0,
+            xindex2: 0,
+            xbuffer: [0; 80],
+            ybuffer: [0; 25],
         }
-        C1A = C1A.wrapping_add(3);
-        C1B = C1B.wrapping_sub(5);
+    }
+    /// Generate stochastic character set
+    pub fn make_charset(charset_address: *mut u8) {
+        let generate_char = |sine| {
+            const BITS: [u8; 8] = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80];
+            let mut char_pattern: u8 = 0;
+            BITS.iter()
+                .filter(|_| mega65::rand8(u8::MAX) > sine)
+                .for_each(|bit| {
+                    char_pattern |= bit;
+                });
+            char_pattern
+        };
 
-        let mut c2a = C2A;
-        let mut c2b = C2B;
-        for x in XBUF.iter_mut() {
-            *x = SINETABLE[c2a as usize].wrapping_add(SINETABLE[c2b as usize]);
-            c2a = c2a.wrapping_add(3);
-            c2b = c2b.wrapping_add(7);
+        repeat_element(SINETABLE.iter().copied(), 8)
+            .enumerate()
+            .for_each(|(cnt, sine)| {
+                let character = generate_char(sine);
+                unsafe {
+                    poke!(charset_address.offset(cnt as isize), character);
+                }
+                if cnt % 64 == 0 {
+                    print!(".");
+                }
+            });
+    }
+
+    /// Render entire screen at given address
+    pub fn render(&mut self, screen_address: *mut u8) {
+        let mut i = self.yindex1;
+        let mut j = self.yindex2;
+        for y in self.ybuffer.iter_mut() {
+            *y = SINETABLE[i as usize].wrapping_add(SINETABLE[j as usize]);
+            i = i.wrapping_add(4);
+            j = j.wrapping_add(9);
         }
-        C2A = C2A.wrapping_add(2);
-        C2B = C2B.wrapping_sub(3);
+        self.yindex1 = self.yindex1.wrapping_add(3);
+        self.yindex2 = self.yindex2.wrapping_sub(5);
 
-        let mut cnt: isize = 0;
-        for y in YBUF.iter().copied() {
-            for x in XBUF.iter().copied() {
+        i = self.xindex1;
+        j = self.xindex2;
+        for x in self.xbuffer.iter_mut() {
+            *x = SINETABLE[i as usize].wrapping_add(SINETABLE[j as usize]);
+            i = i.wrapping_add(3);
+            j = j.wrapping_add(7);
+        }
+        self.xindex1 = self.xindex1.wrapping_add(2);
+        self.xindex2 = self.xindex2.wrapping_sub(3);
+
+        let mut offset: usize = 0; // screen memory offset
+        for y in self.ybuffer.iter().copied() {
+            for x in self.xbuffer.iter().copied() {
                 let sum = x.wrapping_add(y);
-                poke!(screen_ptr.offset(cnt), sum);
-                cnt += 1;
+                unsafe {
+                    poke!(screen_address.add(offset), sum);
+                }
+                offset += 1;
             }
         }
     }
@@ -84,21 +101,16 @@ fn render_plasma(screen_ptr: *mut u8) {
 
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
-    const CHARSET: u16 = 0x3000; // Custom charset
-    const SCREEN1: u16 = 0x0800; // Set up two character screens...
-    const SCREEN2: u16 = 0x2800; // ...for double buffering
-    const PAGE1: u8 =
-        vic2::ScreenBank::from_address(SCREEN1).bits() | vic2::CharsetBank::from(CHARSET).bits();
-    const PAGE2: u8 =
-        vic2::ScreenBank::from_address(SCREEN2).bits() | vic2::CharsetBank::from(CHARSET).bits();
+    const CHARSET: u16 = 0x3000; // Character set location
+    const SCREEN: u16 = 0x0800; // Screen address
+    const PAGE: u8 =
+        vic2::ScreenBank::from_address(SCREEN).bits() | vic2::CharsetBank::from(CHARSET).bits();
 
-    make_charset(CHARSET as *mut u8);
+    let mut plasma = Plasma::new(CHARSET as *mut u8);
+    unsafe { (*mega65::VICII).screen_and_charset_bank.write(PAGE) };
     mega65::speed_mode3(); // reduce CPU speed to 3.5 Mhz
     loop {
-        render_plasma(SCREEN1 as *mut u8);
-        unsafe { (*mega65::VICII).screen_and_charset_bank.write(PAGE1) };
-        render_plasma(SCREEN2 as *mut u8);
-        unsafe { (*mega65::VICII).screen_and_charset_bank.write(PAGE2) };
+        plasma.render(SCREEN as *mut u8);
     }
 }
 

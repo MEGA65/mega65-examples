@@ -12,7 +12,7 @@ extern crate mos_hardware;
 extern crate ufmt_stdio;
 
 use core::panic::PanicInfo;
-use mos_hardware::*;
+use mos_hardware::{mega65, vic2, SINETABLE, repeat_element};
 use ufmt_stdio::*;
 
 /// Class for rendering a character mode plasma effect
@@ -41,7 +41,7 @@ impl Plasma {
     /// Generate stochastic character set
     pub fn make_charset(charset_address: *mut u8) {
         let generate_char = |sine| {
-            const BITS: [u8; 8] = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80];
+            const BITS: [u8; 8] = [1, 2, 4, 8, 16, 32, 64, 128];
             let mut char_pattern: u8 = 0;
             BITS.iter()
                 .filter(|_| mega65::rand8(u8::MAX) > sine)
@@ -56,7 +56,7 @@ impl Plasma {
             .for_each(|(cnt, sine)| {
                 let character = generate_char(sine);
                 unsafe {
-                    poke!(charset_address.offset(cnt as isize), character);
+                    charset_address.add(cnt).write_volatile(character);
                 }
                 if cnt % 64 == 0 {
                     print!(".");
@@ -91,7 +91,7 @@ impl Plasma {
             for x in self.xbuffer.iter().copied() {
                 let sum = x.wrapping_add(y);
                 unsafe {
-                    poke!(screen_address.add(offset), sum);
+                    screen_address.add(offset).write_volatile(sum);
                 }
                 offset += 1;
             }
@@ -101,16 +101,19 @@ impl Plasma {
 
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
-    const CHARSET: u16 = 0x3000; // Character set location
-    const SCREEN: u16 = 0x0800; // Screen address
-    const PAGE: u8 =
-        vic2::ScreenBank::from_address(SCREEN).bits() | vic2::CharsetBank::from(CHARSET).bits();
+    const CHARSET: u16 = 0x3000; // Custom character set location
+    let page = vic2::ScreenBank::from_address(mega65::DEFAULT_SCREEN as u16).bits()
+        | vic2::CharsetBank::from(CHARSET).bits();
 
     let mut plasma = Plasma::new(CHARSET as *mut u8);
-    unsafe { (*mega65::VICII).screen_and_charset_bank.write(PAGE) };
+
+    unsafe {
+        (*mega65::VICII).screen_and_charset_bank.write(page)
+    };
+    
     mega65::speed_mode3(); // reduce CPU speed to 3.5 Mhz
     loop {
-        plasma.render(SCREEN as *mut u8);
+        plasma.render(mega65::DEFAULT_SCREEN);
     }
 }
 

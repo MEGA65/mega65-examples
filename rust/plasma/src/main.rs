@@ -1,4 +1,4 @@
-//! C64 Plasma Example (80 x 25 mode for mega65)
+//! Plasma Example (80 x 25 mode for mega65)
 //!
 //! - (w)2001 by groepaz; sourced from the CC65 /samples/cbm directory
 //! - Cleanup and porting to CC65 by Ullrich von Bassewitz.
@@ -9,11 +9,9 @@
 #![feature(default_alloc_error_handler)]
 
 extern crate mos_hardware;
-extern crate ufmt_stdio;
 
 use core::panic::PanicInfo;
-use mos_hardware::{mega65, vic2, SINETABLE, repeat_element};
-use ufmt_stdio::*;
+use mos_hardware::{mega65, repeat_element, sine, SINETABLE};
 
 /// Class for rendering a character mode plasma effect
 struct Plasma {
@@ -26,9 +24,9 @@ struct Plasma {
 }
 
 impl Plasma {
-    /// Create new instance and initialize character set
-    pub fn new(charset_address: *mut u8) -> Plasma {
-        Plasma::make_charset(charset_address);
+    /// Create new instance and initialize character set at given address
+    pub fn new(charset_address: u16) -> Plasma {
+        Plasma::make_charset(charset_address as *mut u8);
         Plasma {
             yindex1: 0,
             yindex2: 0,
@@ -39,7 +37,7 @@ impl Plasma {
         }
     }
     /// Generate stochastic character set
-    pub fn make_charset(charset_address: *mut u8) {
+    fn make_charset(charset_address: *mut u8) {
         let generate_char = |sine| {
             const BITS: [u8; 8] = [1, 2, 4, 8, 16, 32, 64, 128];
             let mut char_pattern: u8 = 0;
@@ -53,13 +51,10 @@ impl Plasma {
 
         repeat_element(SINETABLE.iter().copied(), 8)
             .enumerate()
-            .for_each(|(cnt, sine)| {
+            .for_each(|(offset, sine)| {
                 let character = generate_char(sine);
                 unsafe {
-                    charset_address.add(cnt).write_volatile(character);
-                }
-                if cnt % 64 == 0 {
-                    print!(".");
+                    charset_address.add(offset).write_volatile(character);
                 }
             });
     }
@@ -69,7 +64,7 @@ impl Plasma {
         let mut i = self.yindex1;
         let mut j = self.yindex2;
         for y in self.ybuffer.iter_mut() {
-            *y = SINETABLE[i as usize].wrapping_add(SINETABLE[j as usize]);
+            *y = sine(i).wrapping_add(sine(j));
             i = i.wrapping_add(4);
             j = j.wrapping_add(9);
         }
@@ -79,7 +74,7 @@ impl Plasma {
         i = self.xindex1;
         j = self.xindex2;
         for x in self.xbuffer.iter_mut() {
-            *x = SINETABLE[i as usize].wrapping_add(SINETABLE[j as usize]);
+            *x = sine(i).wrapping_add(sine(j));
             i = i.wrapping_add(3);
             j = j.wrapping_add(7);
         }
@@ -101,17 +96,10 @@ impl Plasma {
 
 #[start]
 fn _main(_argc: isize, _argv: *const *const u8) -> isize {
-    const CHARSET: u16 = 0x3000; // Custom character set location
-    let page = vic2::ScreenBank::from_address(mega65::DEFAULT_SCREEN as u16).bits()
-        | vic2::CharsetBank::from(CHARSET).bits();
-
-    let mut plasma = Plasma::new(CHARSET as *mut u8);
-
-    unsafe {
-        (*mega65::VICII).screen_and_charset_bank.write(page)
-    };
-    
-    mega65::speed_mode3(); // reduce CPU speed to 3.5 Mhz
+    const CHARSET_ADDRESS: u16 = 0x3000;
+    let mut plasma = Plasma::new(CHARSET_ADDRESS);
+    mega65::set_charset_address(CHARSET_ADDRESS);
+    mega65::speed_mode3(); // reduce cpu speed
     loop {
         plasma.render(mega65::DEFAULT_SCREEN);
     }
@@ -119,7 +107,8 @@ fn _main(_argc: isize, _argv: *const *const u8) -> isize {
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
-    #[cfg(not(target_vendor = "nes-nrom-128"))]
-    print!("!");
-    loop {}
+    loop {
+        mega65::set_border_color(0);
+        mega65::set_border_color(2);
+    }
 }

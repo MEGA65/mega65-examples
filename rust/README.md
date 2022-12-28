@@ -15,11 +15,17 @@ do not fancy compiling LLVM and rust-mos, see below.
 The easiest way is to use the provided `.devcontainer.json` configuration for vscode:
 
 1. Start Docker
-2. In Visual Studio Code, add the 
-   [Dev Containers](vscode:extension/ms-vscode-remote.remote-containers) extension
-3. Open the project in vscode (_e.g._ with `code .`) and when asked, _Reopen in Container_.
+2. In Visual Studio Code (VSC), add the 
+   [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension
+3. Open the project in VSC:
+   ~~~ bash
+   cd mega65-examples/rust
+   code .
+   ~~~
+
+4. When asked, _Reopen in Container_.
    The directory is automatically mounted inside the Docker container.
-4. In the vscode terminal do:
+5. In the VSC terminal do:
    ~~~ bash
    export CARGO_NET_GIT_FETCH_WITH_CLI=true # only needed if Docker uses qemu
    cargo build --release                    # outputs to target/mos-mega65-none/release
@@ -36,6 +42,6 @@ The easiest way is to use the provided `.devcontainer.json` configuration for vs
        └── main.rs
    ~~~
    (see `plasma/` for an example)
-2. Add the new directory to `members` in `rust/Cargo.toml`
+2. In `rust/Cargo.toml`, add the new directory name, here `my_example`, to `members`
 3. Build with `cargo build --release -p my_example`
 

@@ -2,22 +2,22 @@
  * Plasma effect sourced from cc65/samples/cbm
  * - 2001 by groepaz
  * - Cleanup and porting by Ullrich von Bassewitz.
- * - 2022 - cleanup and MEGA65/llvm-mos adaptation (wombat)
+ * - 2022 MEGA65/llvm-mos adaptation (wombat)
  *   Note that we reduce the MEGA65 clock frequency to 3.5 Mhz.
- *   Also clangs `#pragma unroll` gives a significant speedup when
+ *   Clangs `#pragma unroll` gives a significant speedup when
  *   using the -Os optimization level.
  */
 
 #include <stdio.h>
 #include <random.h>
 #include <memory.h>
+#include "conio.h"
 
 #define COLS 80
 #define ROWS 25
 #define SINESIZE 256
-#define SCREEN1 0x0800
-#define SCREEN2 0x2800
-#define CHARSET 0x3000
+#define SCREEN_ADDRESS 0x0800
+#define CHARSET_ADDRESS 0x3000
 #define VICII_MEMORY_CONTROL 0xd018
 #define VICIV_CONTROLB 0xd031
 #define VICIV_CONTROLC 0xd054
@@ -41,15 +41,15 @@ static const uint8_t sinustable[SINESIZE] = { 0x80, 0x7d, 0x7a, 0x77, 0x74, 0x70
   0xc4, 0xc1, 0xbf, 0xbc, 0xb9, 0xb6, 0xb3, 0xb1, 0xae, 0xab, 0xa8, 0xa5, 0xa2, 0x9f, 0x9c, 0x99, 0x96, 0x93, 0x90, 0x8c,
   0x89, 0x86, 0x83 };
 
-uint8_t c1A = 0;
-uint8_t c1B = 0;
-uint8_t c2A = 0;
-uint8_t c2B = 0;
-
 void draw(uint8_t* screen)
 {
   static uint8_t xbuffer[COLS];
   static uint8_t ybuffer[ROWS];
+  static uint8_t c1A = 0;
+  static uint8_t c1B = 0;
+  static uint8_t c2A = 0;
+  static uint8_t c2B = 0;
+
   uint8_t c2a = c2A;
   uint8_t c2b = c2B;
   uint8_t c1a = c1A;
@@ -80,8 +80,7 @@ void draw(uint8_t* screen)
 
 void generate_charset()
 {
-  static const uint8_t bits[8] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
-
+  static const uint8_t bits[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };
   for (int cnt = 0; cnt < SINESIZE; ++cnt) {
     const uint8_t sine = sinustable[cnt];
     for (int i = 0; i < 8; ++i) {
@@ -91,10 +90,7 @@ void generate_charset()
           char_pattern |= bits[j];
         }
       }
-      POKE(CHARSET + cnt * 8 + i, char_pattern);
-    }
-    if ((cnt & 0x07) == 0) {
-      putchar('.');
+      POKE(CHARSET_ADDRESS + cnt * 8 + i, char_pattern);
     }
   }
 }
@@ -112,13 +108,8 @@ int main()
 {
   generate_charset();
   speed_mode3();
+  setcharsetaddr(CHARSET_ADDRESS);
   while (1) {
-    /* Build page 1, then make it visible */
-    draw((uint8_t*)SCREEN1);
-    POKE(VICII_MEMORY_CONTROL, PAGE1);
-
-    /* Build page 2, then make it visible */
-    draw((uint8_t*)SCREEN2);
-    POKE(VICII_MEMORY_CONTROL, PAGE2);
+    draw((uint8_t*)SCREEN_ADDRESS);
   }
 }

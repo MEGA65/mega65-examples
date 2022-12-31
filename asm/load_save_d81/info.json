@@ -1,0 +1,26 @@
+{
+    "title": "Load and Save with KickAssembler Demo,",
+    "description": "Loading and saving from and to D81 images with KickAssembler",
+    "author": "Christian Scholz",
+    "keywords": [
+        "load",
+        "save"
+    ],
+    "languages": [
+        "asm"
+    ],
+    "requirements": [
+        "kickasm",
+        "c1541",
+        "vice"
+    ],
+    "rom": 920377,
+    "discord": "Roughnight#4815)",
+    "email": "cptnroughnight@gmail.com",
+    "prgs": [
+        "example.prg"
+    ],
+    "build": "build.bat",
+    "website": "roughnight.ddns.net",
+}
+

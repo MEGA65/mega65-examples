@@ -1,0 +1,16 @@
+.label SaveFile=$20ac {
+}
+.label DemoLoadFile=$201d {
+}
+.label Start=$2016 {
+}
+.label LoadFile=$2075 {
+}
+.label DemoSaveFile=$203b {
+}
+.label SaveAddress=$4 {
+}
+.label lfAddr=$2073
+.label PaletteFileName=$2061
+.label SaveFileName=$2069
+.label lfBank=$2071

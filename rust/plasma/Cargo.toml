@@ -3,6 +3,9 @@ name = "plasma"
 version = "0.1.0"
 
 [dependencies]
-itertools = {version = "0.10", default-features = false}
 mos-hardware = {workspace = true}
 ufmt-stdio = {workspace = true}
+mos-alloc = {workspace = true}
+itertools = {version = "0.10", default-features = false}
+rand = {version = "0.8", default-features = false}
+

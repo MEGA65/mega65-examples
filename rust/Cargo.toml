@@ -14,12 +14,14 @@ edition = "2021"
 [workspace.dependencies]
 mos-hardware = {git = "https://github.com/mlund/mos-hardware", branch = "main"}
 ufmt-stdio = "0"
+mos-alloc = "0.2"
 
 [profile.dev]
 opt-level = 2
 lto = true
 debug = 2
 codegen-units = 1
+strip = true
 
 [profile.release]
 opt-level = "s"

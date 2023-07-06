@@ -1,10 +1,19 @@
 [build]
 target = "mos-mega65-none"
-rustflags = ["-C", "opt-level=s", "-C", "lto=fat"]
+
+[target.mos-c64-none]
+runner = ["x64sc", "+confirmonexit"]
 
 [target.mos-mega65-none]
 runner = ["xmega65", "-besure", "-prg"]
 
+[target.mos-cx16-none]
+runner = ["x16emu", "-run", "-prg"]
+
+[target.mos-sim-none]
+runner = ["mos-sim", "--cycles"]
+
 [unstable]
 build-std = ["core", "alloc"]
 build-std-features = ["panic_immediate_abort"]
+

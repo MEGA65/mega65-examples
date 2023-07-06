@@ -27,7 +27,6 @@ The easiest way is to use the provided `.devcontainer.json` configuration for vs
    The directory is automatically mounted inside the Docker container.
 5. In the VSC terminal do:
    ~~~ bash
-   export CARGO_NET_GIT_FETCH_WITH_CLI=true # only needed if Docker uses qemu
    cargo build --release                    # outputs to target/mos-mega65-none/release
    ~~~
 

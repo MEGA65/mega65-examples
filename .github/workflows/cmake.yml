@@ -28,20 +28,20 @@ jobs:
     - name: Install llvm-mos-sdk
       working-directory: ${{github.workspace}}
       run: |
-        wget https://github.com/llvm-mos/llvm-mos-sdk/releases/latest/download/llvm-mos-linux.tar.xz
+        wget -q https://github.com/llvm-mos/llvm-mos-sdk/releases/latest/download/llvm-mos-linux.tar.xz
         tar xf llvm-mos-linux.tar.xz
 
     - name: Build c/plasma
       working-directory: ${{github.workspace}}/c/plasma
       run: |
-        cmake -DCMAKE_PREFIX_PATH=${{github.workspace}}/llvm_mos -B build/ .
+        cmake -DCMAKE_PREFIX_PATH=${{github.workspace}}/llvm-mos -B build/ .
         cd build/
         make
 
     - name: Build cpp/plasma
       working-directory: ${{github.workspace}}/cpp/plasma
       run: |
-        cmake -DCMAKE_PREFIX_PATH=${{github.workspace}}/llvm_mos -B build/ .
+        cmake -DCMAKE_PREFIX_PATH=${{github.workspace}}/llvm-mos -B build/ .
         cd build/
         make        
 

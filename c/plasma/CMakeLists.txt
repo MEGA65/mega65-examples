@@ -5,7 +5,7 @@ project(plasma VERSION 0.1.0 LANGUAGES C)
 include(cmake/CPM.cmake)
 add_compile_options(-mcpu=mos65ce02 -Os -Wall -Wextra -Wshadow -Wconversion -Wno-language-extension-token -Wsigned)
 
-CPMAddPackage(NAME mega65libc GITHUB_REPOSITORY mega65/mega65-libc GIT_TAG master SOURCE_SUBDIR clang)
+CPMAddPackage(NAME mega65libc GITHUB_REPOSITORY mega65/mega65-libc GIT_TAG v0.2.0 SOURCE_SUBDIR clang)
 add_executable(plasma plasma.c)
 target_link_libraries(plasma mega65libc)
 set_target_properties(plasma PROPERTIES OUTPUT_NAME plasma.prg)

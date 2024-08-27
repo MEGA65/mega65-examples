@@ -6,7 +6,6 @@
 
 #![no_std]
 #![feature(start)]
-#![feature(default_alloc_error_handler)]
 
 extern crate mos_alloc;
 extern crate mos_hardware;
@@ -14,7 +13,7 @@ extern crate rand;
 
 use core::ops::BitOr;
 use core::panic::PanicInfo;
-use mos_hardware::mega65::random::LibcRng;
+use mos_hardware::mega65::random::HardwareRng;
 use mos_hardware::{mega65, repeat_element, sine, SINETABLE};
 use rand::Rng;
 
@@ -43,7 +42,7 @@ impl Plasma {
     }
     /// Generate stochastic character set
     fn make_charset(charset_address: *mut u8) {
-        let mut rng = LibcRng::default();
+        let mut rng = HardwareRng::default();
         let make_char = |sine| {
             [1, 2, 4, 8, 16, 32, 64, 128]
                 .iter()
@@ -93,7 +92,7 @@ fn _main(_argc: isize, _argv: *const *const u8) -> isize {
     const CHARSET_ADDRESS: u16 = 0x3000;
     let mut plasma = Plasma::new(CHARSET_ADDRESS);
     mega65::set_charset_address(CHARSET_ADDRESS);
-    mega65::speed_mode3(); // reduce cpu speed
+    mega65::CPUSpeed::set(&mega65::CPUSpeed::Medium); // reduce cpu speed
     loop {
         plasma.render(mega65::DEFAULT_SCREEN);
     }

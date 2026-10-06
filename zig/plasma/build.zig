@@ -84,6 +84,7 @@ fn mega65Headers(b: *std.Build, sdk: *std.Build.Dependency, libc: *std.Build.Dep
         .optimize = opt,
         .link_libc = false,
     });
+    tc.defineCMacro("__STDC_HOSTED__", "0");
     tc.addIncludePath(libc.path("include"));
     tc.addIncludePath(libc.path("include/mega65"));
     tc.addIncludePath(sdk.path("mos-platform/common/include"));

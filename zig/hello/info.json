@@ -1,0 +1,21 @@
+{
+    "title": "Hello world,",
+    "description": "A greeting written directly to screen RAM from Zig",
+    "author": "The MEGA65 Community",
+    "keywords": [
+        "hello",
+        "screen",
+        "zig"
+    ],
+    "languages": [
+        "zig"
+    ],
+    "requirements": [
+        "zig-mos"
+    ],
+    "rom": 920376,
+    "prgs": [
+        "hello.prg"
+    ],
+    "build": "zig build"
+}

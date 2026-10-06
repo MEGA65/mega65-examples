@@ -1,0 +1,14 @@
+.{
+    .name = .hello,
+    .version = "0.0.1",
+    .minimum_zig_version = "0.17.0-mos",
+    .paths = .{""},
+    .fingerprint = 0x3610a6867e5ac473,
+    .dependencies = .{
+        // Startup assembly, linker scripts and libc sources.
+        .@"llvm-mos-sdk" = .{
+            .url = "git+https://github.com/llvm-mos/llvm-mos-sdk#3f6968bbc156ff9a63102a8e158db868819bd61c",
+            .hash = "N-V-__8AAKSeLAA0M14Y-qtR7Srg-0spUC9lk4H3234zgjc1",
+        },
+    },
+}

@@ -1,0 +1,21 @@
+.{
+    .name = .plasma,
+    .version = "0.0.1",
+    .minimum_zig_version = "0.17.0-mos",
+    .paths = .{""},
+    .fingerprint = 0xd9e93465984bd5d0,
+    .dependencies = .{
+        // Startup assembly, linker scripts and libc sources for the MEGA65
+        // platform. Zig compiles all of these itself; no llvm-mos toolchain
+        // installation is required.
+        .@"llvm-mos-sdk" = .{
+            .url = "git+https://github.com/llvm-mos/llvm-mos-sdk#3f6968bbc156ff9a63102a8e158db868819bd61c",
+            .hash = "N-V-__8AAKSeLAA0M14Y-qtR7Srg-0spUC9lk4H3234zgjc1",
+        },
+        // C headers translated into Zig.
+        .@"mega65-libc" = .{
+            .url = "git+https://github.com/mega65/mega65-libc#49f2f115d3d45da9475f00a34250587df472fe3a",
+            .hash = "N-V-__8AAEi4BQCsQLqubPd2GuG1KltNMZ_pi0pkpZiczpfs",
+        },
+    },
+}

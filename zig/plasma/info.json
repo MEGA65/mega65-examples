@@ -1,0 +1,21 @@
+{
+    "title": "Plasma effect in Zig,",
+    "description": "A demo-inspired plasma effect ported to zig",
+    "author": "The MEGA65 Community",
+    "keywords": [
+        "plasma",
+        "charset",
+        "zig"
+    ],
+    "languages": [
+        "zig"
+    ],
+    "requirements": [
+        "zig-mos"
+    ],
+    "rom": 920376,
+    "prgs": [
+        "plasma.prg"
+    ],
+    "build": "zig build"
+}

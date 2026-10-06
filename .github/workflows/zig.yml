@@ -1,0 +1,95 @@
+name: Zig
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            name: Linux x86_64
+            zig_archive: zig-x86_64-linux-musl-baseline.tar.xz
+            zig_dir: zig-x86_64-linux-musl-baseline
+          - os: macos-latest
+            name: macOS aarch64
+            zig_archive: zig-aarch64-macos-baseline.tar.xz
+            zig_dir: zig-aarch64-macos-baseline
+          - os: ubuntu-24.04-arm
+            name: Linux aarch64
+            zig_archive: zig-aarch64-linux-musl-baseline.tar.xz
+            zig_dir: zig-aarch64-linux-musl-baseline
+          - os: windows-latest
+            name: Windows x86_64
+            zig_archive: zig-x86_64-windows-baseline.zip
+            zig_dir: zig-x86_64-windows-baseline
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@main
+
+      - name: Cache zig-mos toolchain
+        id: cache-zig
+        uses: actions/cache@main
+        with:
+          path: ${{ matrix.zig_dir }}
+          key: zig-mos-${{ matrix.zig_archive }}-v1
+
+      - name: Download zig-mos toolchain
+        if: steps.cache-zig.outputs.cache-hit != 'true'
+        env:
+          ZIG_ARCHIVE: ${{ matrix.zig_archive }}
+          ZIG_DIR: ${{ matrix.zig_dir }}
+        run: |
+          curl -fsSL -O "https://github.com/kassane/zig-mos-bootstrap/releases/download/0.17.0/${ZIG_ARCHIVE}"
+          if [[ "${ZIG_ARCHIVE}" == *.zip ]]; then unzip -q "${ZIG_ARCHIVE}"; else tar -xf "${ZIG_ARCHIVE}"; fi
+
+      - name: Add zig-mos to PATH
+        env:
+          ZIG_DIR: ${{ matrix.zig_dir }}
+        run: echo "$PWD/${ZIG_DIR}" >> "$GITHUB_PATH"
+
+      - name: Cache zig packages
+        uses: actions/cache@main
+        with:
+          path: |
+            zig/hello/zig-pkg
+            zig/plasma/zig-pkg
+          key: zig-pkg-${{ hashFiles('zig/**/build.zig.zon') }}
+
+      - name: Build zig/hello
+        working-directory: zig/hello
+        run: |
+          zig build --summary all
+          zig build -Doptimize=ReleaseSmall --summary all
+
+      - name: Build zig/plasma
+        working-directory: zig/plasma
+        run: |
+          zig build --summary all
+          zig build -Doptimize=ReleaseSmall --summary all
+
+      - name: Verify outputs
+        run: |
+          ls -la zig/hello/zig-out/bin/ zig/plasma/zig-out/bin/
+          for f in zig/hello/zig-out/bin/hello.prg zig/plasma/zig-out/bin/plasma.prg; do
+            if ! test -s "$f"; then echo "MISSING: $f"; exit 1; fi
+            echo "OK: $f ($(wc -c < "$f") bytes)"
+          done
+
+      - name: Upload built binaries
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@main
+        with:
+          name: zig-prgs
+          path: |
+            zig/hello/zig-out/bin/
+            zig/plasma/zig-out/bin/
+          retention-days: 1
